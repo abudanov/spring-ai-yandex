@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.abudanov</groupId>
+        <artifactId>springframework-ai-yandex</artifactId>
+        <version>0.1.0</version>
+    </parent>
+
+    <artifactId>spring-ai-yandex-spring-boot-starter</artifactId>
+    <name>Spring AI Starter - Yandex</name>
+    <description>Spring AI Yandex Auto Configuration</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.abudanov</groupId>
+            <artifactId>spring-ai-yandex-spring-boot-autoconfigure</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.abudanov</groupId>
+            <artifactId>spring-ai-yandex</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+</project>
