@@ -1,5 +1,6 @@
 # YandexGPT for Spring AI
 ![Maven Central Version](https://img.shields.io/maven-central/v/io.github.abudanov/spring-ai-yandex-spring-boot-starter)
+![GitHub License](https://img.shields.io/github/license/abudanov/spring-ai-yandex)
 
 
 
