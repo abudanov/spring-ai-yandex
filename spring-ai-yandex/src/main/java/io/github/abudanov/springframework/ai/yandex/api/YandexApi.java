@@ -45,23 +45,34 @@ public class YandexApi {
 
 		String getModelScheme();
 
+		default String getVersion() {
+			return "latest";
+		}
+
 		default String getModelUri(String folderId) {
-			return getModelScheme() + '/' + folderId + '/' + getName();
+			return getModelScheme() + "://" + folderId + '/' + getName() + '/' + getVersion();
 		}
 
 	}
 
 	public enum ChatModel implements ChatModelDescription, YandexModelDescription {
 
-		YANDEXGPT_3("yandexgpt", ModelVersion.LATEST), YANDEXGPT_3_LITE("yandexgpt-lite", ModelVersion.LATEST);
+		YANDEXGPT_PRO("yandexgpt", ModelVersion.LATEST, "3"),
+		YANDEXGPT_LITE("yandexgpt-lite", ModelVersion.LATEST, "3"),
+		YANDEXGPT_PRO_RC("yandexgpt", ModelVersion.RELEASE_CANDIDATE, "4"),
+		YANDEXGPT_LITE_RC("yandexgpt-lite", ModelVersion.RELEASE_CANDIDATE, "4"),
+		YANDEXGPT_32K_RC("yandexgpt-32k", ModelVersion.RELEASE_CANDIDATE, "4");
 
 		private final String value;
 
 		private final ModelVersion version;
 
-		ChatModel(String value, ModelVersion version) {
+		private final String generation;
+
+		ChatModel(String value, ModelVersion version, String generation) {
 			this.value = value;
 			this.version = version;
+			this.generation = generation;
 		}
 
 		@Override
@@ -79,10 +90,17 @@ public class YandexApi {
 			return this.version.getName();
 		}
 
+		public String getGeneration() {
+			return generation;
+		}
+
 		public static ChatModel ofValue(String value) {
 			return switch (value) {
-				case "yandexgpt" -> YANDEXGPT_3;
-				case "yandexgpt-lite" -> YANDEXGPT_3_LITE;
+				case "yandexgpt" -> YANDEXGPT_PRO;
+				case "yandexgpt-lite" -> YANDEXGPT_LITE;
+				case "yandexgpt/rc" -> YANDEXGPT_PRO_RC;
+				case "yandexgpt-lite/rc" -> YANDEXGPT_LITE_RC;
+				case "yandexgpt-32k", "yandexgpt-32k/rc" -> YANDEXGPT_32K_RC;
 				default -> throw new IllegalArgumentException("Unknown chat model: " + value);
 			};
 		}
@@ -193,6 +211,16 @@ public class YandexApi {
 	}
 
 	/**
+	 * A record representing the result of a completion generation request.
+	 *
+	 * @param result The completion response containing generated alternatives, usage
+	 * statistics, and model version.
+	 */
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public record CompletionResult(@JsonProperty("result") CompletionResponse result) {
+	}
+
+	/**
 	 * @param alternatives A list of generated completion alternatives.
 	 * @param usage A set of statistics describing the number of content tokens used by
 	 * the completion model.
@@ -246,11 +274,11 @@ public class YandexApi {
 
 	}
 
-	public ResponseEntity<CompletionResponse> completionEntity(CompletionRequest request) {
+	public ResponseEntity<CompletionResult> completionEntity(CompletionRequest request) {
 		return completionEntity(request, new LinkedMultiValueMap<>());
 	}
 
-	public ResponseEntity<CompletionResponse> completionEntity(CompletionRequest request,
+	public ResponseEntity<CompletionResult> completionEntity(CompletionRequest request,
 			MultiValueMap<String, String> additionalHttpHeaders) {
 
 		Assert.notNull(request, "The request body must not be null.");
@@ -262,7 +290,7 @@ public class YandexApi {
 			.headers(headers -> headers.addAll(additionalHttpHeaders))
 			.body(request)
 			.retrieve()
-			.toEntity(CompletionResponse.class);
+			.toEntity(CompletionResult.class);
 
 	}
 

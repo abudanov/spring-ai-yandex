@@ -8,7 +8,7 @@
     <artifactId>springframework-ai-yandex</artifactId>
     <packaging>pom</packaging>
     <description>Yandex models support</description>
-    <version>0.1.0</version>
+    <version>0.1.2</version>
     <modules>
         <module>spring-ai-yandex</module>
         <module>spring-ai-yandex-spring-boot-autoconfigure</module>
@@ -40,7 +40,7 @@
 
     <properties>
         <spring-ai.version>1.0.0-M3</spring-ai.version>
-        <spring-boot.version>3.3.4</spring-boot.version>
+        <spring-boot.version>3.3.5</spring-boot.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.release>17</maven.compiler.release>

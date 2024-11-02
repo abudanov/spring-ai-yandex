@@ -85,23 +85,19 @@ public class YandexChatModel implements ChatModel {
 			.observe(() -> {
 				var completionEntity = this.retryTemplate.execute(ctx -> this.yandexApi.completionEntity(request));
 				var response = completionEntity.getBody();
-				if (response == null) {
-					logger.warn("No chat completion returned for prompt: {}", prompt);
+				if (response == null || response.result() == null) {
+					logger.warn("No completion response returned for prompt: {}", prompt);
 					return new ChatResponse(List.of());
 				}
-				var alternatives = response.alternatives();
-				if (alternatives == null) {
-					logger.warn("No alternatives returned for prompt: {}", prompt);
-					return new ChatResponse(List.of());
-				}
-				List<Generation> generations = alternatives.stream().map(alternative -> {
+				var result = response.result();
+				List<Generation> generations = result.alternatives().stream().map(alternative -> {
 					var assistantMessage = new AssistantMessage(alternative.message().text());
 					var generationMetadata = ChatGenerationMetadata.from(alternative.status().name(), null);
 					return new Generation(assistantMessage, generationMetadata);
 				}).toList();
 				var metadata = ChatResponseMetadata.builder()
-					.withUsage(response.usage() != null ? YandexChatUsage.from(response.usage()) : new EmptyUsage())
-					.withModel(response.modelVersion())
+					.withUsage(result.usage() != null ? YandexChatUsage.from(result.usage()) : new EmptyUsage())
+					.withModel(result.modelVersion())
 					.build();
 				return new ChatResponse(generations, metadata);
 			});

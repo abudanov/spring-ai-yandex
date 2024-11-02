@@ -10,7 +10,7 @@ public class YandexChatProperties extends YandexCommonProperties {
 
 	public static final String CONFIG_PREFIX = "spring.ai.yandex.chat";
 
-	public static final YandexApi.ChatModel DEFAULT_CHAT_MODEL = YandexApi.ChatModel.YANDEXGPT_3;
+	public static final YandexApi.ChatModel DEFAULT_CHAT_MODEL = YandexApi.ChatModel.YANDEXGPT_PRO;
 
 	public static final String DEFAULT_COMPLETION_PATH = "/v1/completion";
 
